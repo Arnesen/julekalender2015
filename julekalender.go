@@ -30,8 +30,10 @@ func main() {
 	//	oppgave7()
 	//	oppgave8()
 	//	oppgave9()
-	oppgave10()
-	// oppgave13()
+	// oppgave10()
+	// oppgave18()
+	// oppgave19()
+	oppgave20()
 	elapsed := time.Since(start)
 	log.Printf("run took %s", elapsed)
 }
@@ -81,21 +83,19 @@ func findBest(lines []string, f func(f float64)) {
 	}
 	if len(leftSide) < 4 {
 		return
-	} else {
-		f(findBestProfit(leftSide))
-		findBest(leftSide, f)
 	}
+	f(findBestProfit(leftSide))
+	findBest(leftSide, f)
+
 	var rightSide []string
 	for i := (len(lines) / 2); i < len(lines); i++ {
 		rightSide = append(rightSide, lines[i])
 	}
 	if len(rightSide) < 4 {
 		return
-	} else {
-		f(findBestProfit(rightSide))
-		findBest(rightSide, f)
 	}
-
+	f(findBestProfit(rightSide))
+	findBest(rightSide, f)
 	return
 }
 
@@ -201,7 +201,7 @@ func oppgave8() {
 }
 
 func oppgave9() {
-	columntitle := make([]rune, 0)
+	var columntitle []rune
 	num := 142453146368
 	for num > 0 {
 		num-- // 1 => a, not 0 => a
@@ -217,7 +217,7 @@ func oppgave10() {
 	fmt.Println("Oppgave10")
 	content, _ := ioutil.ReadFile("oppgave2")
 	lines := strings.Split(string(content), "\n")
-	profits := make([]float64, 0)
+	var profits []float64
 	findBest(lines, func(stuff float64) { profits = append(profits, stuff) })
 	fmt.Println(profits)
 }
@@ -231,6 +231,90 @@ func oppgave12() {
 	fmt.Println(answer)
 }
 
+func oppgave18() {
+
+	fmt.Println("Oppgave18")
+	letters := []int{2907, 6165, 6129, 3468, 2040, 4331, 7935, 5683, 6004, 9694, 8092, 188, 5796, 1184, 8873, 3200, 1981, 9556, 9981, 1387, 7802, 8387, 9970, 7326, 5372, 28, 628, 3408, 6, 3425, 3071, 6021, 9989, 5077, 824, 938, 1399, 5607, 6973, 5703, 9609, 4398, 8247, 5164, 2026, 4, 4468, 9524, 8, 9227, 8969, 1746, 5593}
+	sort.Sort(ByFactor(letters))
+	fmt.Println(letters)
+	number := ""
+	for _, element := range letters {
+		number = number + strconv.Itoa(element)
+	}
+	fmt.Println(number)
+}
+
+func oppgave19() {
+	fmt.Println("Oppgave19")
+	fmt.Println(countWays(30, 3))
+}
+
+func oppgave20() {
+	fmt.Println("Oppgave19")
+	str := "FJKAUNOJDCUTCRHBYDLXKEODVBWTYPTSHASQQFCPRMLDXIJMYPVOHBDUGSMBLMVUMMZYHULSUIZIMZTICQORLNTOVKVAMQTKHVRIFMNTSLYGHEHFAHWWATLYAPEXTHEPKJUGDVWUDDPRQLUZMSZOJPSIKAIHLTONYXAULECXXKWFQOIKELWOHRVRUCXIAASKHMWTMAJEWGEESLWRTQKVHRRCDYXNTLDSUPXMQTQDFAQAPYBGXPOLOCLFQNGNKPKOBHZWHRXAWAWJKMTJSLDLNHMUGVVOPSAMRUJEYUOBPFNEHPZZCLPNZKWMTCXERPZRFKSXVEZTYCXFRHRGEITWHRRYPWSVAYBUHCERJXDCYAVICPTNBGIODLYLMEYLISEYNXNMCDPJJRCTLYNFMJZQNCLAGHUDVLYIGASGXSZYPZKLAWQUDVNTWGFFYFFSMQWUNUPZRJMTHACFELGHDZEJWFDWVPYOZEVEJKQWHQAHOCIYWGVLPSHFESCGEUCJGYLGDWPIWIDWZZXRUFXERABQJOXZALQOCSAYBRHXQQGUDADYSORTYZQPWGMBLNAQOFODSNXSZFURUNPMZGHTAJUJROIGMRKIZHSFUSKIZJJTLGOEEPBMIXISDHOAIFNFEKKSLEXSJLSGLCYYFEQBKIZZTQQXBQZAPXAAIFQEIXELQEZGFEPCKFPGXULLAHXTSRXDEMKFKABUTAABSLNQBNMXNEPODPGAORYJXCHCGKECLJVRBPRLHORREEIZOBSHDSCETTTNFTSMQPQIJBLKNZDMXOTRBNMTKHHCZQQMSLOAXJQKRHDGZVGITHYGVDXRTVBJEAHYBYRYKJAVXPOKHFFMEPHAGFOOPFNKQAUGYLVPWUJUPCUGGIXGRAMELUTEPYILBIUOCKKUUBJROQFTXMZRLXBAMHSDTEKRRIKZUFNLGTQAEUINMBPYTWXULQNIIRXHHGQDPENXAJNWXULFBNKBRINUMTRBFWBYVNKNKDFR"
+	strS := "ABCDA"
+	smallestHit := str
+	for i := 0; i < len(str); i++ {
+		for c := 1; c <= len(str)-i; c++ {
+			subStr := str[c : c+i]
+			if len(subStr) > 4 && len(subStr) < len(smallestHit) {
+				hit := true
+				for _, element := range []rune(strS) {
+					if !containsRune([]rune(subStr), element) {
+						hit = false
+					}
+					if hit && !containsTwoRunes([]rune(subStr), []rune(strS)[0]) {
+						hit = false
+					}
+				}
+				if hit {
+					smallestHit = subStr
+				}
+			}
+		}
+	}
+	fmt.Println(smallestHit)
+}
+
+func countWays(s int, m int) int {
+	return countWaysUtil(s+1, m)
+}
+
+func countWaysUtil(n int, m int) int {
+	if n <= 1 {
+		return n
+	}
+	res := 0
+	for i := 1; i <= m && i <= n; i++ {
+		res += countWaysUtil(n-i, m)
+	}
+	return res
+}
+
+//ByFactor Sorts number by how large they are combined
+type ByFactor []int
+
+func (s ByFactor) Len() int {
+	return len(s)
+}
+
+func (s ByFactor) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+func (s ByFactor) Less(i, j int) bool {
+	a := strconv.Itoa(s[i]) + strconv.Itoa(s[j])
+	b := strconv.Itoa(s[j]) + strconv.Itoa(s[i])
+
+	first, _ := strconv.Atoi(a)
+	second, _ := strconv.Atoi(b)
+	fmt.Println(first)
+	fmt.Println(second)
+	if first < second {
+		return false
+	}
+	return true
+}
+
 // Generate numbers until the limit max.
 // after the 2, all the prime numbers are odd
 // Send a channel signal when the limit is reached
@@ -242,7 +326,7 @@ func Generate(max int, ch chan<- int) {
 	ch <- -1 // signal that the limit is reached
 }
 
-// Copy the values from channel 'in' to channel 'out',
+// Filter and copy the values from channel 'in' to channel 'out',
 // removing those divisible by 'prime'.
 func Filter(in <-chan int, out chan<- int, prime int) {
 	for i := <-in; i != -1; i = <-in {
@@ -253,13 +337,14 @@ func Filter(in <-chan int, out chan<- int, prime int) {
 	out <- -1
 }
 
-func CalcPrimeFactors(number_to_factorize int) []int {
+// CalcPrimeFactors calculates prime factors to a number
+func CalcPrimeFactors(numberToFactorize int) []int {
 	rv := []int{}
 	ch := make(chan int)
-	go Generate(number_to_factorize, ch)
-	for prime := <-ch; (prime != -1) && (number_to_factorize > 1); prime = <-ch {
-		for number_to_factorize%prime == 0 {
-			number_to_factorize = number_to_factorize / prime
+	go Generate(numberToFactorize, ch)
+	for prime := <-ch; (prime != -1) && (numberToFactorize > 1); prime = <-ch {
+		for numberToFactorize%prime == 0 {
+			numberToFactorize = numberToFactorize / prime
 			rv = append(rv, prime)
 		}
 		ch1 := make(chan int)
@@ -299,44 +384,13 @@ func oppgave13() {
 		if hits == 10000 {
 			found = true
 		}
-
-		//				if (contains(factors, 2) && !contains(factors, 3) && !contains(factors, 5)) {
-		//					hits++
-		//					theNumber = i
-		//				}
-		//				if (!contains(factors, 2) && contains(factors, 3) && !contains(factors, 5)) {
-		//					hits++
-		//					theNumber = i
-		//				}
-		//				if (!contains(factors, 2) && !contains(factors, 3) && contains(factors, 5)) {
-		//					hits++
-		//					theNumber = i
-		//				}
-
-		//		if (i == 1) {
-		//			hits++
-		//			theNumber = i
-		//		}
-
-		//		if (i % 2 == 0 && i % 3 != 0 && i % 5 != 0) {
-		//			hits++
-		//			theNumber = i
-		//		}
-		//		if (i % 3 == 0 && i % 2 > 0 && i % 5 != 0) {
-		//			hits++
-		//			theNumber = i
-		//		}
-		//		if ( i % 5 == 0 && i % 2 > 0 && i % 5 > 0) {
-		//			hits++
-		//			theNumber = i
-		//		}
 	}
 
 	fmt.Println("The final number: " + strconv.Itoa(theNumber))
 }
 
 func findBestProfit(lines []string) float64 {
-	var bestProfit float64 = 0
+	var bestProfit float64
 	for index, element := range lines {
 		var currentPrice, _ = strconv.ParseFloat(element, 64)
 		for i := index; i < len(lines); i++ {
@@ -361,6 +415,7 @@ func (slice floatSlice) pos(value float64) int {
 	return -1
 }
 
+// SliceIndex gets index of element in slice
 func SliceIndex(limit int, predicate func(i int) bool) int {
 	for i := 0; i < limit; i++ {
 		if predicate(i) {
@@ -379,20 +434,41 @@ func contains(s []int, e int) bool {
 	return false
 }
 
+func containsRune(s []rune, e rune) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}
+func containsTwoRunes(s []rune, e rune) bool {
+	hits := 0
+	for _, a := range s {
+		if a == e {
+			hits++
+		}
+	}
+	if hits > 1 {
+		return true
+	}
+	return false
+}
+
 func findParans(pos int, n int, open int, close int, f func()) {
 	if close == n {
 		f()
 		return
-	} else {
-		if open > close {
-			findParans(pos+1, n, open, close+1, f)
-		}
-		if open < n {
-			findParans(pos+1, n, open+1, close, f)
-		}
+	}
+	if open > close {
+		findParans(pos+1, n, open, close+1, f)
+	}
+	if open < n {
+		findParans(pos+1, n, open+1, close, f)
 	}
 }
 
+// Reverse a string
 func Reverse(s string) string {
 	runes := []rune(s)
 	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
@@ -407,6 +483,7 @@ func sorted(s string) string {
 	return string(runes)
 }
 
+// RuneSlice for comparing runes
 type RuneSlice []rune
 
 func (p RuneSlice) Len() int           { return len(p) }
