@@ -11,7 +11,6 @@ import (
 	"strings"
 	"time"
 )
-
 func main() {
 
 	start := time.Now()
@@ -33,7 +32,10 @@ func main() {
 	// oppgave10()
 	// oppgave18()
 	// oppgave19()
-	oppgave20()
+	// oppgave20()
+
+	oppgave22()
+
 	elapsed := time.Since(start)
 	log.Printf("run took %s", elapsed)
 }
@@ -78,7 +80,7 @@ func oppgave2() {
 func findBest(lines []string, f func(f float64)) {
 
 	var leftSide []string
-	for i := 0; i < len(lines)/2; i++ {
+	for i := 0; i < len(lines) / 2; i++ {
 		leftSide = append(leftSide, lines[i])
 	}
 	if len(leftSide) < 4 {
@@ -106,7 +108,7 @@ func oppgave3() {
 	numberOfDays := 365
 	numberOfYears := 2015
 	for year := 0; year < numberOfYears; year++ {
-		if year%4 == 0 && year%100 == 1 || year%400 == 0 {
+		if year % 4 == 0 && year % 100 == 1 || year % 400 == 0 {
 			numberOfDays = 366
 		} else {
 			numberOfDays = 265
@@ -180,13 +182,12 @@ func oppgave7() {
 	sum := 0
 	for i := 0; i < 1000; i++ {
 		reverse, _ := strconv.Atoi(Reverse(strconv.Itoa(i)))
-		if i%7 == 0 && reverse%7 == 0 {
+		if i % 7 == 0 && reverse % 7 == 0 {
 			sum = sum + i
 		}
 	}
 	fmt.Println("Number of matches: " + strconv.Itoa(sum))
 }
-
 func oppgave8() {
 	numberOfHits := 0
 	for i := 0; i < 1000; i++ {
@@ -224,7 +225,7 @@ func oppgave10() {
 func oppgave12() {
 	answer := 0
 	for i := 0; i < 100000000; i++ {
-		if i%7 == 0 && i%5 > 0 {
+		if i % 7 == 0 && i % 5 > 0 {
 			answer = answer + i
 		}
 	}
@@ -248,15 +249,14 @@ func oppgave19() {
 	fmt.Println("Oppgave19")
 	fmt.Println(countWays(30, 3))
 }
-
 func oppgave20() {
 	fmt.Println("Oppgave19")
 	str := "FJKAUNOJDCUTCRHBYDLXKEODVBWTYPTSHASQQFCPRMLDXIJMYPVOHBDUGSMBLMVUMMZYHULSUIZIMZTICQORLNTOVKVAMQTKHVRIFMNTSLYGHEHFAHWWATLYAPEXTHEPKJUGDVWUDDPRQLUZMSZOJPSIKAIHLTONYXAULECXXKWFQOIKELWOHRVRUCXIAASKHMWTMAJEWGEESLWRTQKVHRRCDYXNTLDSUPXMQTQDFAQAPYBGXPOLOCLFQNGNKPKOBHZWHRXAWAWJKMTJSLDLNHMUGVVOPSAMRUJEYUOBPFNEHPZZCLPNZKWMTCXERPZRFKSXVEZTYCXFRHRGEITWHRRYPWSVAYBUHCERJXDCYAVICPTNBGIODLYLMEYLISEYNXNMCDPJJRCTLYNFMJZQNCLAGHUDVLYIGASGXSZYPZKLAWQUDVNTWGFFYFFSMQWUNUPZRJMTHACFELGHDZEJWFDWVPYOZEVEJKQWHQAHOCIYWGVLPSHFESCGEUCJGYLGDWPIWIDWZZXRUFXERABQJOXZALQOCSAYBRHXQQGUDADYSORTYZQPWGMBLNAQOFODSNXSZFURUNPMZGHTAJUJROIGMRKIZHSFUSKIZJJTLGOEEPBMIXISDHOAIFNFEKKSLEXSJLSGLCYYFEQBKIZZTQQXBQZAPXAAIFQEIXELQEZGFEPCKFPGXULLAHXTSRXDEMKFKABUTAABSLNQBNMXNEPODPGAORYJXCHCGKECLJVRBPRLHORREEIZOBSHDSCETTTNFTSMQPQIJBLKNZDMXOTRBNMTKHHCZQQMSLOAXJQKRHDGZVGITHYGVDXRTVBJEAHYBYRYKJAVXPOKHFFMEPHAGFOOPFNKQAUGYLVPWUJUPCUGGIXGRAMELUTEPYILBIUOCKKUUBJROQFTXMZRLXBAMHSDTEKRRIKZUFNLGTQAEUINMBPYTWXULQNIIRXHHGQDPENXAJNWXULFBNKBRINUMTRBFWBYVNKNKDFR"
 	strS := "ABCDA"
 	smallestHit := str
 	for i := 0; i < len(str); i++ {
-		for c := 1; c <= len(str)-i; c++ {
-			subStr := str[c : c+i]
+		for c := 1; c <= len(str) - i; c++ {
+			subStr := str[c : c + i]
 			if len(subStr) > 4 && len(subStr) < len(smallestHit) {
 				hit := true
 				for _, element := range []rune(strS) {
@@ -276,17 +276,33 @@ func oppgave20() {
 	fmt.Println(smallestHit)
 }
 
-func countWays(s int, m int) int {
-	return countWaysUtil(s+1, m)
+func palindrome(word string) (ops int) {
+	for i, j := 0, len(word) - 1; i < j; i, j = i + 1, j - 1 {
+		n := int(word[i]) - int(word[j])
+		if n < 0 {
+			n = -n
+		}
+		ops += n
+	}
+	return ops
 }
 
+func oppgave22() {
+	fmt.Println("oppgave22")
+	fmt.Println(palindrome("evdhtiqgfyvcytohqppcmdbultbnzevdbakvkcdpbatbtjlmzaolfqfqjifkoanqcznmbqbeswglgrzfroswgxoritbw"))
+}
+
+
+func countWays(s int, m int) int {
+	return countWaysUtil(s + 1, m)
+}
 func countWaysUtil(n int, m int) int {
 	if n <= 1 {
 		return n
 	}
 	res := 0
 	for i := 1; i <= m && i <= n; i++ {
-		res += countWaysUtil(n-i, m)
+		res += countWaysUtil(n - i, m)
 	}
 	return res
 }
@@ -318,7 +334,7 @@ func (s ByFactor) Less(i, j int) bool {
 // Generate numbers until the limit max.
 // after the 2, all the prime numbers are odd
 // Send a channel signal when the limit is reached
-func Generate(max int, ch chan<- int) {
+func Generate(max int, ch chan <- int) {
 	ch <- 2
 	for i := 3; i <= max; i += 2 {
 		ch <- i
@@ -328,9 +344,9 @@ func Generate(max int, ch chan<- int) {
 
 // Filter and copy the values from channel 'in' to channel 'out',
 // removing those divisible by 'prime'.
-func Filter(in <-chan int, out chan<- int, prime int) {
+func Filter(in <-chan int, out chan <- int, prime int) {
 	for i := <-in; i != -1; i = <-in {
-		if i%prime != 0 {
+		if i % prime != 0 {
 			out <- i
 		}
 	}
@@ -343,7 +359,7 @@ func CalcPrimeFactors(numberToFactorize int) []int {
 	ch := make(chan int)
 	go Generate(numberToFactorize, ch)
 	for prime := <-ch; (prime != -1) && (numberToFactorize > 1); prime = <-ch {
-		for numberToFactorize%prime == 0 {
+		for numberToFactorize % prime == 0 {
 			numberToFactorize = numberToFactorize / prime
 			rv = append(rv, prime)
 		}
@@ -353,7 +369,6 @@ func CalcPrimeFactors(numberToFactorize int) []int {
 	}
 	return rv
 }
-
 func oppgave13() {
 
 	hits := 0
@@ -361,14 +376,14 @@ func oppgave13() {
 	found := false
 	for i := 1; !found; i++ {
 		hit := false
-		if i%2 == 0 || i%3 == 0 || i%5 == 0 {
+		if i % 2 == 0 || i % 3 == 0 || i % 5 == 0 {
 			hit = true
 			//						if (len(CalcPrimeFactors(i)) > 3) {
 			//							hit = false
 			//						}
 			if i > 6 {
 				for y := 6; y < i; y++ {
-					if i%y == 0 && big.NewInt(int64(y)).ProbablyPrime(1) {
+					if i % y == 0 && big.NewInt(int64(y)).ProbablyPrime(1) {
 						hit = false
 						break
 					}
@@ -461,17 +476,17 @@ func findParans(pos int, n int, open int, close int, f func()) {
 		return
 	}
 	if open > close {
-		findParans(pos+1, n, open, close+1, f)
+		findParans(pos + 1, n, open, close + 1, f)
 	}
 	if open < n {
-		findParans(pos+1, n, open+1, close, f)
+		findParans(pos + 1, n, open + 1, close, f)
 	}
 }
 
 // Reverse a string
 func Reverse(s string) string {
 	runes := []rune(s)
-	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+	for i, j := 0, len(runes) - 1; i < j; i, j = i + 1, j - 1 {
 		runes[i], runes[j] = runes[j], runes[i]
 	}
 	return string(runes)
@@ -486,6 +501,6 @@ func sorted(s string) string {
 // RuneSlice for comparing runes
 type RuneSlice []rune
 
-func (p RuneSlice) Len() int           { return len(p) }
+func (p RuneSlice) Len() int { return len(p) }
 func (p RuneSlice) Less(i, j int) bool { return p[i] < p[j] }
-func (p RuneSlice) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
+func (p RuneSlice) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
